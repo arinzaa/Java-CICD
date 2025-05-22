@@ -16,19 +16,18 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-      with:
-        fetch-depth: 0
     - name: Set up JDK 17
       uses: actions/setup-java@v3
       with:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
+    # Analyze code with Codacy
     - name: Run Codacy Analysis CLI
       uses: codacy/codacy-analysis-cli-action@master
+      
+    #analyze code with sonarcloud
     - name: Build, test, and analyze
-      uses: SonarSource/sonarqube-scan-action@v4
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      with:
-        projectBaseDir: Java-CICD/
+      run: mvn verify sonar:sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=jatihusen -Dsonar.projectKey=jatihusen_Basic-Java-Maven
